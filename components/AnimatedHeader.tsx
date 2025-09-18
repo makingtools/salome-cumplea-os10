@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-// Nuevo Componente de Confeti
+// Componente de Confeti mejorado para crear "ráfagas" de partículas.
 const Confetti: React.FC = () => {
-    const confettiCount = 75;
+    const confettiCount = 100; // Aumentado para un mejor efecto de ráfaga
     const colors = ['#f781bf', '#fcd34d', '#86efac', '#93c5fd', '#c4b5fd']; // Rosa, Amarillo, Verde, Azul, Púrpura
 
     return (
         <>
             {Array.from({ length: confettiCount }).map((_, i) => {
-                const size = Math.random() * 8 + 4; // 4px a 12px
+                const size = Math.random() * 10 + 5; // 5px a 15px
                 const style: React.CSSProperties = {
                     left: `${Math.random() * 100}%`,
                     width: `${size}px`,
@@ -16,10 +16,11 @@ const Confetti: React.FC = () => {
                     backgroundColor: colors[Math.floor(Math.random() * colors.length)],
                     borderRadius: Math.random() > 0.5 ? '50%' : '2px',
                     animationName: 'confetti-fall',
-                    animationTimingFunction: 'linear',
-                    animationIterationCount: 'infinite',
-                    animationDuration: `${Math.random() * 4 + 5}s`, // Duración de 5s a 9s
-                    animationDelay: `${Math.random() * 6}s`, // Inicio escalonado durante 6 segundos
+                    animationTimingFunction: 'ease-out',
+                    animationIterationCount: 1, // La animación se ejecuta solo una vez por partícula
+                    animationFillMode: 'forwards', // Mantiene el estado final (invisible)
+                    animationDuration: `${Math.random() * 3 + 5}s`, // Duración de 5s a 8s
+                    animationDelay: `${Math.random() * 1.5}s`, // Inicio escalonado dentro de 1.5s para un efecto de ráfaga
                 };
                 return <div key={i} className="confetti-particle" style={style} />;
             })}
@@ -34,15 +35,24 @@ interface AnimatedHeaderProps {
 }
 
 const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({ name, backgroundImage }) => {
-  const [showConfetti, setShowConfetti] = useState(false);
+  // Se usa un contador (key) para forzar el re-renderizado del componente Confetti, creando así ráfagas.
+  const [burstKey, setBurstKey] = useState(0);
 
   useEffect(() => {
-    // Inicia el confeti después de que las animaciones del título principal se completen
-    const timer = setTimeout(() => {
-      setShowConfetti(true);
+    // Ráfaga inicial después de que las animaciones del encabezado se completen
+    const initialTimer = setTimeout(() => {
+      setBurstKey(key => key + 1);
     }, 3800); 
 
-    return () => clearTimeout(timer);
+    // Ráfagas subsecuentes periódicamente
+    const interval = setInterval(() => {
+      setBurstKey(key => key + 1);
+    }, 12000); // Nueva ráfaga cada 12 segundos
+
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(interval);
+    };
   }, []);
 
   // Array de configuraciones de destellos
@@ -68,7 +78,9 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({ name, backgroundImage }
       
       {/* Capa de Confeti */}
       <div className="absolute inset-0 pointer-events-none">
-        {showConfetti && <Confetti />}
+        {/* La 'key' es crucial. Al cambiarla, React desmonta el componente Confetti
+            anterior y monta uno nuevo, reiniciando las animaciones para todas las partículas. */}
+        {burstKey > 0 && <Confetti key={burstKey} />}
       </div>
 
       {/* Efecto de Partículas */}

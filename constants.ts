@@ -12,9 +12,9 @@ export const PARTY_DETAILS: PartyDetailsType = {
   }
 };
 
-const WHATSAPP_PHONE_NUMBER = '573142708761';
-const WHATSAPP_MESSAGE = `¡Hola! Confirmo con alegría mi asistencia al cumpleaños número 10 de Emmy. ¡Allí estaremos para celebrar!`;
-export const RSVP_WHATSAPP_LINK = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+export const WHATSAPP_PHONE_NUMBER = '573142708761';
+// El mensaje y enlace de WhatsApp ahora se generan dinámicamente en el componente RsvpButton.
+
 
 // --- Rutas de Imágenes Locales ---
 

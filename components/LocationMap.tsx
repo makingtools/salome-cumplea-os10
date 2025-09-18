@@ -9,7 +9,7 @@ const LocationMap: React.FC<LocationMapProps> = ({ address }) => {
     const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
     return (
-        <div className="max-w-4xl mx-auto h-96 md:h-[500px] bg-black/30 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden p-2">
+        <div className="max-w-4xl mx-auto aspect-[4/3] md:aspect-video bg-black/30 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden p-2">
             <iframe
                 title="Ubicación de la Fiesta"
                 src={mapSrc}
